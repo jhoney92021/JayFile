@@ -1,0 +1,46 @@
+@{
+    ViewData["Title"] = "View File Data";
+}
+<html>
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+  text-align: left;    
+}
+</style>
+</head>
+
+<div>
+    <h1>
+        DISPLAY DATA HERE
+    </h1>
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <table style="width:100%">
+        <tr>
+            @foreach (var column in @ViewBag.FileHeader)
+            {
+                <th>@column</th>
+            }
+        </tr>
+
+
+        @foreach (var row in @ViewBag.FileData)
+        {
+            <tr>
+                @foreach (var data in @row)
+                {
+                    <td>@data</td>
+                }
+            </tr>
+        }
+    </table>
+</div>

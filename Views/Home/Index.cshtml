@@ -6,3 +6,15 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+<br/>
+<div>
+    <a href="https://data.cityofnewyork.us/api/views/kku6-nxdu/rows.csv?accessType=DOWNLOAD"> TestFileLocation </a>
+</div>
+<br/>
+<div>
+    <form asp-action="DownloadFromUrl" asp-controller="Home" method="POST" >
+        <label for="file_to_download_from_url">Give Target Url</label> <br/>
+        <input name="target_url" type="url" value="https://data.cityofnewyork.us/api/views/kku6-nxdu/rows.csv?accessType=DOWNLOAD"><br/>
+        <input type="submit" name="DownloadFromUrl" value="DownloadFromUrl" >
+    </form>
+</div>
