@@ -1,0 +1,54 @@
+@using FunWithFiles.Models
+@model CsvFileViewModel
+
+@{
+    ViewData["Title"] = "View File Data";
+}
+
+<div>
+    <h1>
+        @Model.FileHeader.FileName
+    </h1>
+    </br>
+    </br>
+    </br>
+    <form asp-action="OrderFile" asp-controller="Home" method="POST">
+
+        <label name="order_by" for="">Order By</label>
+        <select name="order_by">
+                <option value="RowNumber">RowNumber</option>
+                @foreach (string column in @Model.FileHeader.Columns)
+                {
+                    <option value="@column" >@column</option>
+                }
+        </select>
+        <input type="hidden" value="@Model" >
+        <input type="submit" name="OrderFile" value="OrderFile">
+    </form>
+
+    </br>
+    </br>
+    </br>
+    </br>
+    <table style="width:100%">
+        <tr>
+            <th>RowNumber</th>
+            @foreach (string column in @Model.FileHeader.Columns)
+            {
+                <th>@column</th>
+            }
+        </tr>
+
+
+        @foreach (CsvFileDataRowViewModel row in @Model.DataRows)
+        {
+            <tr>
+                <td>@row.RowIndex</td>
+                @foreach (string data in @row.ColumnDataList)
+                {
+                    <td>@data</td>
+                }
+            </tr>
+        }
+    </table>
+</div>

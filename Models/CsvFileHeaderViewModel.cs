@@ -6,7 +6,7 @@ namespace FunWithFiles.Models
 {
     public class CsvFileHeaderViewModel
     {
-        string FileName { get; set; }
+        public string FileName { get; set; }
         public List<string> Columns { get; set; }
         object FileHeaderData { get; set; }
 

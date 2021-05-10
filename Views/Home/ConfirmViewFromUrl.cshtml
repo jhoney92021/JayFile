@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Confirm File To View";
+}
+
+@if (@ViewBag.RejectedRequest != null)
+{
+    <h1>
+        @ViewBag.RejectedRequest
+    </h1>
+}
+
+<br/>
+<div>
+    <form asp-action="ConfirmViewFromUrl" asp-controller="Home" method="POST" >
+        <label for=""> Confirm Target Url @ViewBag.TargetUrl </label>
+        <br/>
+        <label for=""> Confirm Target Extenstion @ViewBag.TargetExtensionType </label>
+        <br/>
+        <input type="hidden" name="target_url" value="@ViewBag.TargetUrl" >
+        <input type="hidden" name="extentsion_type" value="@ViewBag.TargetExtensionType" >
+        <input type="submit" name="ConfirmViewFromUrl" value="ConfirmViewFromUrl" >
+        <br/>
+    </form>
+</div>
