@@ -23,8 +23,9 @@ namespace FunWithFiles
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddHttpClient();
-            
+            services.AddHttpClient();            
+            services.AddSession();
+
             services.AddDbContext<DataBaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DataBaseContext"))
                 );
@@ -47,6 +48,7 @@ namespace FunWithFiles
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthorization();
 
