@@ -6,8 +6,10 @@ namespace FunWithFiles.Models
 {
     public class CsvFileDataModel
     {
+        [Required]
+        [Column(name:"FileId", TypeName="pk")]
         [Key]
-        int FileId {get;set;}
+        int Id {get;set;}
         public CsvFileHeaderViewModel FileHeader {get;set;}
         public List<CsvFileDataRowViewModel> DataRows {get;set;}
         [Required]

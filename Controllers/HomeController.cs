@@ -52,8 +52,9 @@ namespace FunWithFiles.Controllers
         }
 
         [HttpPost]
-        public IActionResult OrderFile(string order_by, CsvFileViewModel readFileObject){
+        public IActionResult OrderFile(string order_by, CsvFileViewModel read_file_object){
             
+            var readFileObject = read_file_object;
             Console.WriteLine(order_by);
             var indexToOrderBy = readFileObject.FileHeader.Columns.IndexOf(order_by);
             Console.WriteLine(indexToOrderBy);
