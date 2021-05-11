@@ -50,12 +50,12 @@ namespace FunWithFiles.Controllers
             {
 
                 var readFileObject = ReadCsvWithHeaderFromWebClient(target_url);
-                return View("FileToView", readFileObject);
+                return View("ViewFileAsRaw", readFileObject);
             }
         }
 
         [HttpPost]
-        public IActionResult OrderFile(string order_by, string order_direction)
+        public IActionResult OrderFwwile(string order_by, string order_direction)
         {
 
             var fileToView = HttpContext.Session.GetObjectFromJson<CsvFileViewModel>("FileToView");
@@ -63,12 +63,12 @@ namespace FunWithFiles.Controllers
             if (order_by == "RowNumber" && order_direction == "Descending")
             {
                 fileToView.DataRows = fileToView.DataRows.OrderByDescending(dr => dr.RowIndex).ToList();
-                return View("FileToView", fileToView);
+                return View("ViewFileAsRaw", fileToView);
             }
             if (order_by == "RowNumber" && order_direction == "Ascending")
             {
                 fileToView.DataRows = fileToView.DataRows.OrderBy(dr => dr.RowIndex).ToList();
-                return View("FileToView", fileToView);
+                return View("ViewFileAsRaw", fileToView);
             }
 
             var indexToOrderBy = fileToView.FileHeader.Columns.IndexOf(order_by);
@@ -84,8 +84,53 @@ namespace FunWithFiles.Controllers
 
             HttpContext.Session.SetObjectAsJson("FileToView", fileToView);
 
-            return View("FileToView", fileToView);
+            return View("ViewFileAsRaw", fileToView);
+        }
+        [HttpPost]
+        public IActionResult OrderFile(string filter_by, string order_by, string order_direction, string file_type_to_view)
+        {
+            var viewName = $"ViewFileAs{file_type_to_view}";
+            var fileToView = HttpContext.Session.GetObjectFromJson<CsvFileViewModel>("FileToView");
 
+            if (order_by == "RowNumber" && order_direction == "Descending")
+            {
+                fileToView.DataRows = fileToView.DataRows.OrderByDescending(dr => dr.RowIndex).ToList();
+                return View("ViewFileAsRaw", fileToView);
+            }
+            if (order_by == "RowNumber" && order_direction == "Ascending")
+            {
+                fileToView.DataRows = fileToView.DataRows.OrderBy(dr => dr.RowIndex).ToList();
+                return View("ViewFileAsRaw", fileToView);
+            }
+
+            var indexToOrderBy = fileToView.FileHeader.Columns.IndexOf(order_by);
+
+            if (order_by != "RowNumber" && order_direction == "Descending")
+            {
+                fileToView.DataRows = fileToView.DataRows
+                                            .Where(
+                                                    dr=>double.Parse(dr.ColumnDataList[indexToOrderBy]) >= double.Parse(filter_by)
+                                                  )
+                                            .OrderByDescending(dr => dr.ColumnDataList[indexToOrderBy])
+                                            .ToList();
+            }
+            if (order_by != "RowNumber" && order_direction == "Ascending")
+            {                
+                fileToView.DataRows = fileToView.DataRows
+                                            .Where(
+                                                    dr=>double.Parse(dr.ColumnDataList[indexToOrderBy]) >= double.Parse(filter_by)
+                                                  )
+                                            .OrderBy(dr => dr.ColumnDataList[indexToOrderBy])
+                                            .ToList();
+            }            
+
+            return View(viewName, fileToView);
+        }
+        public IActionResult FileTypeViewer(string file_type_to_view)
+        {
+            var fileToView = HttpContext.Session.GetObjectFromJson<CsvFileViewModel>("FileToView");
+            var viewName = $"ViewFileAs{file_type_to_view}";
+            return View(viewName,fileToView);
         }
         private CsvFileViewModel ReadCsvWithHeaderFromWebClient(string target_url)
         {
@@ -107,7 +152,11 @@ namespace FunWithFiles.Controllers
             var fileObject = new CsvFileViewModel();
             fileObject.FileHeader = new CsvFileHeaderViewModel();
             fileObject.FileHeader.ParseHeader(fileHeader);
+            fileObject.FileHeader.ConvertToXml();
+            fileObject.FileHeader.ConvertToJson();
             fileObject.ParseDataRows(fileBody, fileObject.FileHeader.Columns);
+            fileObject.ConvertDataRowsToXml();
+            fileObject.ConvertDataRowsToJson();
             fileObject.RawFileData = fileBody;
 
 
@@ -118,8 +167,7 @@ namespace FunWithFiles.Controllers
 
             if (HttpContext.Session.GetObjectFromJson<CsvFileViewModel>("FileToView") == null)
             {
-                HttpContext.Session.SetObjectAsJson("FileToView", fileObject);
-                HttpContext.Session.SetObjectAsJson("FileContents", fileObject.DataRows);
+                HttpContext.Session.SetObjectAsJson("FileToView", fileObject);                
             }
 
             return fileObject;

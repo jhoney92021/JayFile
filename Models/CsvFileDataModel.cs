@@ -11,7 +11,7 @@ namespace FunWithFiles.Models
         [Key]
         int Id {get;set;}
         public CsvFileHeaderViewModel FileHeader {get;set;}
-        public List<CsvFileDataRowViewModel> DataRows {get;set;}
+        public List<FileDataRowViewModel> DataRows {get;set;}
         [Required]
         [Column(name:"RawHeaderFileData")]
         public string RawHeaderFileData {get;set;}

@@ -1,17 +1,6 @@
 @using FunWithFiles.Models
 @model CsvFileViewModel
 
-@{
-    ViewData["Title"] = "View File Data";
-}
-
-<div>
-    <h1>
-        @Model.FileHeader.FileName
-    </h1>
-    </br>
-    </br>
-    </br>
     <form asp-action="OrderFile" asp-controller="Home" method="POST">
 
         <label name="order_by" for="">Order By</label>
@@ -22,38 +11,27 @@
                     <option value="@column" >@column</option>
                 }
         </select>
+        </br>
         <label for="order_direction">Direction To Order By</label>
         <select name="order_direction" id="">
             <option value="Ascending">Ascending</option>
             <option value="Descending">Descending</option>
         </select>
+        </br>
+        <label for="filter_by">Filter To Numbers Greater Than</label>
+        <input type="text" name="filter_by" value="20">
         <input type="hidden" name="read_file_object" value="@Model" >
         <input type="submit" name="order_by" value="OrderFile">
     </form>
-
     </br>
     </br>
     </br>
-    </br>
-    <table style="width:100%">
-        <tr>
-            <th>RowNumber</th>
-            @foreach (string column in @Model.FileHeader.Columns)
-            {
-                <th>@column</th>
-            }
-        </tr>
-
-
-        @foreach (CsvFileDataRowViewModel row in @Model.DataRows)
-        {
-            <tr>
-                <td>@row.RowIndex</td>
-                @foreach (string column in @row.ColumnDataList)
-                {
-                    <td>@column</td>
-                }
-            </tr>
-        }
-    </table>
-</div>
+    <form asp-action="FileTypeViewer" asp-controller="Home" method="POST">
+        <label name="file_type_to_view">View As</label>
+        <select name="file_type_to_view" >
+            <option value="Raw">Raw (html table formatted)</option>
+            <option value="Json">JavaScript Object Notation (json)</option>
+            <option value="Xml">Extensible Markup Language (xml)</option>
+        </select>
+        <input type="submit" name="file_type_to_view" value="ViewAsType">
+    </form>

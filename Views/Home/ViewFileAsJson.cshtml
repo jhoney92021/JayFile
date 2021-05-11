@@ -1,0 +1,41 @@
+@using FunWithFiles.Models
+@model CsvFileViewModel
+
+@{
+    ViewData["Title"] = "View File Data As Json";
+}
+
+<div>
+    <h1>
+        @Model.FileHeader.FileName
+    </h1>
+    </br>
+    </br>
+@Html.Partial("~/Views/Home/_ViewFileAs.cshtml", Model)
+    </br>
+    </br>
+    </br>
+    </br>
+    <table style="width:100%">
+        <div>
+            <div>RowNumber</div>
+            </br>
+            </br>
+            <div>@Model.FileHeader.ColumnsJson</div>
+            </br>
+        </div>
+        </br>
+
+
+        @foreach (FileDataRowViewModel row in @Model.DataRowsJson)
+        {
+            <div>
+                <div>@row.RowIndex</div>
+                @foreach (string column in @row.ColumnDataList)
+                {
+                    <div>@column</div>
+                }
+            </div>
+        }
+    </table>
+</div>

@@ -70,9 +70,9 @@ namespace FunWithFiles.Models
 
             return columnList;
         }
-        public static List<CsvFileDataRowViewModel> ParseCsvRowsToDataRowObject(string csvRowsAsString, List<string> columnNames)
+        public static List<FileDataRowViewModel> ParseCsvRowsToDataRowObject(string csvRowsAsString, List<string> columnNames)
         {
-            var rowList = new List<CsvFileDataRowViewModel>();
+            var rowList = new List<FileDataRowViewModel>();
             var lengthToParse = csvRowsAsString.Length;
             var stringStartIndex = 0;
 
@@ -81,7 +81,7 @@ namespace FunWithFiles.Models
                 if (csvRowsAsString[idx] == _newLine)
                 {
                     rowList.Add(
-                        new CsvFileDataRowViewModel(){
+                        new FileDataRowViewModel(){
                             ColumnDataList = ParseCsvRowToList(csvRowsAsString.Substring(stringStartIndex, (idx - stringStartIndex))),
                             RowIndex = rowList.Count + 1
                         }

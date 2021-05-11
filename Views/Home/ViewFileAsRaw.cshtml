@@ -1,0 +1,40 @@
+@using FunWithFiles.Models
+@model CsvFileViewModel
+
+@{
+    ViewData["Title"] = "View File Data";
+}
+
+<div>
+    <h1>
+        @Model.FileHeader.FileName
+    </h1>
+    </br>
+    </br>
+@Html.Partial("~/Views/Home/_ViewFileAs.cshtml", Model)
+    </br>
+    </br>
+    </br>
+    </br>
+    <table style="width:100%">
+        <tr>
+            <th>RowNumber</th>
+            @foreach (string column in @Model.FileHeader.Columns)
+            {
+                <th>@column</th>
+            }
+        </tr>
+
+
+        @foreach (FileDataRowViewModel row in @Model.DataRows)
+        {
+            <tr>
+                <td>@row.RowIndex</td>
+                @foreach (string column in @row.ColumnDataList)
+                {
+                    <td>@column</td>
+                }
+            </tr>
+        }
+    </table>
+</div>

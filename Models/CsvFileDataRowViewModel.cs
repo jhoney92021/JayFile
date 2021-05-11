@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FunWithFiles.Models
 {   
-    public class CsvFileDataRowViewModel
+    public class FileDataRowViewModel
     {
         public int RowIndex {get;set;}        
         [NotMapped]

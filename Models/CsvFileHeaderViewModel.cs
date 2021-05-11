@@ -11,12 +11,22 @@ namespace FunWithFiles.Models
         public string FileName { get; set; }
         [NotMapped]
         public List<string> Columns { get; set; }
-        object FileHeaderData { get; set; }
-
+        public string ColumnsXml { get; set; }
+        public string ColumnsRaw { get; set; }
+        public string ColumnsJson { get; set; }
         public void ParseHeader(string headerRow)
         {
             Columns = CsvParser.ParseCsvRowToList(headerRow);
+            ColumnsRaw = headerRow;
         }
 
+        public void ConvertToXml()
+        {
+            ColumnsXml = XmlConverter.ConvertStringListToXmlString(Columns, "header", "column");
+        }
+        public void ConvertToJson()
+        {
+            ColumnsJson = JsonConverter.ConvertListToJson(Columns, "header");
+        }
     }
 }
