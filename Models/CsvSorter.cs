@@ -6,12 +6,7 @@ namespace FunWithFiles.Models
 {
     public static class CsvSorter
     {
-        public static Dictionary<int, string> SortCsvRowDictionary()
-        {
-            return new Dictionary<int, string>();
-        }
-
-        public static List<CsvFileDataRowColumnViewModel> SortRowList(List<CsvFileDataRowColumnViewModel> readCsvFile, int orderByIdx)
+        public static List<CsvFileDataRowColumnViewModel> SortRowList(string rawFileString, int orderByIdx)
         {
 
             Console.WriteLine("-------Order File --------");

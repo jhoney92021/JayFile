@@ -7,21 +7,20 @@ namespace FunWithFiles.Models
 {
     public class CsvFileViewModel
     {
-        string FileName {get;set;}        
         [NotMapped]
         public CsvFileHeaderViewModel FileHeader {get;set;}
         [NotMapped]
         public List<CsvFileDataRowViewModel> DataRows {get;set;}
-        public object RawFileData {get;set;}
+        public string RawFileData {get;set;}
 
-        public void ParseDataRows(string rawNonHeaderData)
+        public void ParseDataRows(string rawNonHeaderData, List<string> columnDefs)
         {
-            DataRows = CsvParser.ParseCsvRowsToDataRowObject(rawNonHeaderData);
+            DataRows = CsvParser.ParseCsvRowsToDataRowObject(rawNonHeaderData, columnDefs);
         }
 
         public void OrderDataRowsByIndex(int indexToOrderBy)
         {
-            DataRows = DataRows.OrderBy(dr => dr.ColumnDataList[0].ColumnIdx == indexToOrderBy).ToList();
+            //DataRows = DataRows.OrderBy(dr => dr.ColumnDataList[0].ColumnIdx == indexToOrderBy).ToList();
         }
         public void OrderDataRowsByRowNumber(int rowNumber)
         {

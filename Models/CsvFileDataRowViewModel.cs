@@ -8,6 +8,6 @@ namespace FunWithFiles.Models
     {
         public int RowIndex {get;set;}        
         [NotMapped]
-        public List<CsvFileDataRowColumnViewModel> ColumnDataList {get;set;}
+        public List<string> ColumnDataList {get;set;}
     }
 }

@@ -22,6 +22,11 @@
                     <option value="@column" >@column</option>
                 }
         </select>
+        <label for="order_direction">Direction To Order By</label>
+        <select name="order_direction" id="">
+            <option value="Ascending">Ascending</option>
+            <option value="Descending">Descending</option>
+        </select>
         <input type="hidden" name="read_file_object" value="@Model" >
         <input type="submit" name="order_by" value="OrderFile">
     </form>
@@ -44,9 +49,9 @@
         {
             <tr>
                 <td>@row.RowIndex</td>
-                @foreach (CsvFileDataRowColumnViewModel column in @row.ColumnDataList)
+                @foreach (string column in @row.ColumnDataList)
                 {
-                    <td>@column.ColumnData</td>
+                    <td>@column</td>
                 }
             </tr>
         }
