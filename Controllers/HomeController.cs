@@ -56,18 +56,25 @@ namespace FunWithFiles.Controllers
         {
             var fileToView = HttpContext.Session.GetObjectFromJson<CsvFileViewModel>("FileToView");
             if(order_by == "RowNumber"){
-                fileToView.DataRows = (List<CsvFileDataRowViewModel>)fileToView.DataRows.OrderBy(dr => dr.RowIndex);
+                //fileToView.DataRows = (List<CsvFileDataRowViewModel>)fileToView.DataRows.OrderBy(dr => dr.RowIndex);
                 return View("FileToView", fileToView);
             }
+
 
             Console.WriteLine(order_by);
             Console.WriteLine(fileToView.FileHeader.FileName);
             var indexToOrderBy = fileToView.FileHeader.Columns.IndexOf(order_by);
             Console.WriteLine(indexToOrderBy);
 
-           fileToView.DataRows = (List<CsvFileDataRowViewModel>)fileToView.DataRows.OrderBy(dr => dr.ColumnDataList[indexToOrderBy]);
-            // readFileObject.DataRows = from dr in readFileObject.DataRows
-            //                             orderby dr.ColumnDataList.(indexToOrderBy);
+            var orderedFile = fileToView.DataRows.OrderBy(dr => dr.ColumnDataList.All(dl => dl.ColumnIdx == indexToOrderBy)).ToList();
+            var contents = HttpContext.Session.GetObjectFromJson<List<CsvFileDataRowViewModel>>("FileContents");
+            //fileToView.DataRows = fileToView.DataRows.OrderBy(dr => dr.ColumnDataList.All(dl => dl.ColumnIdx.Equals(indexToOrderBy))).ToList();
+           // fileToView.DataRows = contents.OrderBy(dr => dr.ColumnDataList.FirstOrDefault(dl => dl.ColumnIdx == indexToOrderBy)).ToList();
+            fileToView.DataRows = contents.OrderBy(dr => dr.ColumnDataList.Select(x => x.ColumnIdx).Equals(indexToOrderBy)).ToList();
+//            fileToView.OrderDataRows(indexToOrderBy);
+
+            HttpContext.Session.SetObjectAsJson("FileToView", fileToView);
+
             return View("FileToView", fileToView);
 
         }
@@ -102,6 +109,7 @@ namespace FunWithFiles.Controllers
             if (HttpContext.Session.GetObjectFromJson<CsvFileViewModel>("FileToView") == null)
             {
                 HttpContext.Session.SetObjectAsJson("FileToView", fileObject);
+                HttpContext.Session.SetObjectAsJson("FileContents", fileObject.DataRows);
             }
 
             return fileObject;

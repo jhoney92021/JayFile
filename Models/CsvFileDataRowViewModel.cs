@@ -6,8 +6,8 @@ namespace FunWithFiles.Models
 {   
     public class CsvFileDataRowViewModel
     {
-        public int RowIndex {get;set;}
+        public int RowIndex {get;set;}        
         [NotMapped]
-        public List<string> ColumnDataList {get;set;}
+        public List<CsvFileDataRowColumnViewModel> ColumnDataList {get;set;}
     }
 }

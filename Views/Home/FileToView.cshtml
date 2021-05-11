@@ -44,9 +44,9 @@
         {
             <tr>
                 <td>@row.RowIndex</td>
-                @foreach (string data in @row.ColumnDataList)
+                @foreach (CsvFileDataRowColumnViewModel column in @row.ColumnDataList)
                 {
-                    <td>@data</td>
+                    <td>@column.ColumnData</td>
                 }
             </tr>
         }
