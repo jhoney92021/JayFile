@@ -8,6 +8,7 @@ using System.IO;
 using System.Net;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace FunWithFiles.Controllers
 {
@@ -120,15 +121,17 @@ namespace FunWithFiles.Controllers
             return View(viewName,fileToView);
         }
         [HttpPost]
-        public IActionResult DownloadFileInCurrentState(FileViewModel download_file_in_current_state, string filePath, string fileExtension)
+        public IActionResult DownloadFileInCurrentState(string file_type_to_download)
         {
-            var viewName = $"ViewFileAs{fileExtension}";
+            var viewName = $"ViewFileAs{file_type_to_download}";
 
-            var fileBody = GetFileBodyForFileType(download_file_in_current_state, fileExtension);
+            var fileToView = HttpContext.Session.GetObjectFromJson<FileViewModel>("FileToView");
 
-            DataFile.WriteStringToFile(fileBody, download_file_in_current_state.FileHeader.FileName, fileExtension);
+            var fileBody = GetFileBodyForFileType(fileToView, file_type_to_download);
 
-            return View();
+            DataFile.WriteStringToFile(fileBody, fileToView.FileHeader.FileName, file_type_to_download);
+
+            return View(viewName,fileToView);
         }
         private FileViewModel ReadCsvWithHeaderFromWebClient(string target_url)
         {
@@ -148,6 +151,7 @@ namespace FunWithFiles.Controllers
             var fileObject = new FileViewModel();
             fileObject.FileHeader = new FileHeaderViewModel();
             fileObject.FileHeader.ParseHeader(fileHeader);
+            fileObject.FileHeader.SetColumnsRaw(fileHeader);
             fileObject.FileHeader.ConvertToXml();
             fileObject.FileHeader.ConvertToJson();
             fileObject.ParseDataRows(fileBody, fileObject.FileHeader.Columns);
@@ -159,10 +163,6 @@ namespace FunWithFiles.Controllers
             if (responseHeaders != null)
             {
                 fileObject.FileHeader.FileName = TryParseFileNameFromResponseHeaders(responseHeaders, "filename=", ".csv");
-            }
-            else
-            {
-                fileObject.FileHeader.FileName = "noName";
             }
 
             if (HttpContext.Session.GetObjectFromJson<FileViewModel>("FileToView") == null)
@@ -189,13 +189,27 @@ namespace FunWithFiles.Controllers
             switch(fileExtension)
             {
                 case "Raw":
-                   return download_file_in_current_state.DataRows.ToString();
+                   return ParseRowsToString(download_file_in_current_state.DataRows, download_file_in_current_state.FileHeader.ColumnsRaw);
                 case "Json":
-                   return download_file_in_current_state.DataRowsJson.ToString();
+                   return ParseRowsToString(download_file_in_current_state.DataRowsJson, download_file_in_current_state.FileHeader.ColumnsJson);
                 case "Xml":
-                   return download_file_in_current_state.DataRowsXml.ToString();
+                   return ParseRowsToString(download_file_in_current_state.DataRowsXml, download_file_in_current_state.FileHeader.ColumnsXml);
                 default: return "";
             }
+        }
+
+        private string ParseRowsToString (List<FileDataRowViewModel> dataRows, string header)
+        {
+            string parsedDataRows = header;
+
+            foreach(FileDataRowViewModel row in dataRows)
+            {
+                foreach(string column in row.ColumnDataList)
+                {
+                    parsedDataRows = String.Concat(parsedDataRows,column);
+                }
+            }
+            return parsedDataRows;
         }
         private void OrderData(string filter_by, string order_by, string order_direction, string file_type_to_view)
         {

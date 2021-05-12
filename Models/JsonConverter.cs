@@ -8,14 +8,14 @@ namespace FunWithFiles.Models
         public static string ConvertListToJson(List<string> parsedString, string property, string? property2 = null)
         {
             string jsonString = "";
-            string openTag = String.Concat("{" , $"{property} : ");
+            string openTag = String.Concat("{" , $"\"{property}\" : \"");
             string closeTag = "";
 
             jsonString = String.Concat(jsonString,openTag);            
 
             if(!String.IsNullOrWhiteSpace(property2)){
-                openTag = String.Concat("{" , $"{property2} : ");
-                closeTag = "}";
+                openTag = String.Concat("{" , $"\"{property2}\" : \"");
+                closeTag = "\"}";
             }else
             {
                 openTag = "";
@@ -26,7 +26,7 @@ namespace FunWithFiles.Models
                 jsonString = String.Concat(jsonString,openTag,element,closeTag);
             }
 
-            closeTag = "}";
+            closeTag = "\"}";
             jsonString = String.Concat(jsonString,closeTag);
 
             return jsonString;
@@ -38,7 +38,7 @@ namespace FunWithFiles.Models
 
             string jsonString = "";
             string openTag = "";
-            string closeTag = "}";
+            string closeTag = "\"}";
 
             int indexOfColumnName = 0;
             
@@ -46,7 +46,7 @@ namespace FunWithFiles.Models
             {
                 indexOfColumnName = parsedStringList.IndexOf(parsedString);
                 
-                openTag = String.Concat("{" , $"{propertyToWrap[indexOfColumnName]} : ");            
+                openTag = String.Concat("{" , $"\"{propertyToWrap[indexOfColumnName]}\" : \"");            
 
                 jsonStringList.Add(
                     String.Concat(jsonString,openTag,parsedString,closeTag)
