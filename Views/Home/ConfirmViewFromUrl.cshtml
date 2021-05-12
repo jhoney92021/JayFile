@@ -9,16 +9,16 @@
     </h1>
 }
 
-<br/>
+</br>
 <div>
     <form asp-action="ConfirmViewFromUrl" asp-controller="Home" method="POST" >
         <label for=""> Confirm Target Url @ViewBag.TargetUrl </label>
-        <br/>
+        </br>
         <label for=""> Confirm Target Extenstion @ViewBag.TargetExtensionType </label>
-        <br/>
+        </br>
         <input type="hidden" name="target_url" value="@ViewBag.TargetUrl" >
         <input type="hidden" name="extentsion_type" value="@ViewBag.TargetExtensionType" >
         <input type="submit" name="ConfirmViewFromUrl" value="ConfirmViewFromUrl" >
-        <br/>
+        </br>
     </form>
 </div>

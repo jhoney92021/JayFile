@@ -6,34 +6,34 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
-<br/>
+</br>
 <div>
     <a href="https://data.cityofnewyork.us/api/views/kku6-nxdu/rows.csv?accessType=DOWNLOAD"> TestFileLocation </a>
 </div>
-<br/>
+</br>
 <div>
     <form asp-action="ViewFromUrl" asp-controller="Home" method="POST" >
         <label for="file_to_download_from_url">Give Target Url</label>
-        <br/>
+        </br>
         <input name="target_url" type="url"> 
-        <br/>
+        </br>
         <select name="target_url_list_selection" >
             <option value="https://data.cityofnewyork.us/api/views/kku6-nxdu/rows.csv?accessType=DOWNLOAD">Assignment Url</option>
-            <option value="wwwroot\sampleCsvs\sample1.csv">Sample1</option>
-            <option value="wwwroot\sampleCsvs\sample2.csv">Sample2</option>
+            @* <option value="wwwroot\sampleCsvs\sample1.csv">Sample1</option> *@
+            @* <option value="wwwroot\sampleCsvs\sample2.csv">Sample2</option> *@
         </select>
-        <br/>
-        <br/>
+        </br>
+        </br>
         <label for="extension_type">Chose a File Extension (currently only csv will work)</label>
-        <br/>
+        </br>
         <select name="extentsion_type" id="extentsion_type">
             <option value="csv">Comma Seperated Values</option>
             <option value="json">Java Script Object Notation (json/ Not Implemented Yet)</option>
             <option value="txt">Text File (fixed width file/ Not Implemented Yet)</option>
             <option value="xls">Excel (xls/ Not Implemented Yet)</option>
         </select>
-        <br/>
-        <br/>
+        </br>
+        </br>
         <input type="submit" name="ViewFromUrl" value="ViewFromUrl" >
     </form>
 </div>
