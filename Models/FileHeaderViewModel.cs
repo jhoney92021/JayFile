@@ -6,10 +6,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FunWithFiles.Models
 {
-    public class CsvFileHeaderViewModel
+    public class FileHeaderViewModel
     {
         public string FileName { get; set; }
-        [NotMapped]
         public List<string> Columns { get; set; }
         public string ColumnsXml { get; set; }
         public string ColumnsRaw { get; set; }

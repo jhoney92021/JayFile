@@ -1,5 +1,5 @@
 @using FunWithFiles.Models
-@model CsvFileViewModel
+@model FileViewModel
 
     <form asp-action="OrderFile" asp-controller="Home" method="POST">
 
@@ -20,8 +20,18 @@
         </br>
         <label for="filter_by">Filter To Numbers Greater Than</label>
         <input type="text" name="filter_by" value="20">
+        </br>
+        </br>
+        </br>
+        <label name="file_type_to_view">View As</label>
+        <select name="file_type_to_view" >
+            <option value="Raw">Raw (html table formatted)</option>
+            <option value="Json">JavaScript Object Notation (json)</option>
+            <option value="Xml">Extensible Markup Language (xml)</option>
+        </select>
+        </br>
         <input type="hidden" name="read_file_object" value="@Model" >
-        <input type="submit" name="order_by" value="OrderFile">
+        <input type="submit" value="OrderFile">
     </form>
     </br>
     </br>

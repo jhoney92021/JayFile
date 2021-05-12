@@ -6,7 +6,7 @@ namespace FunWithFiles.Models
     {
         // base() calls the parent class' constructor passing the "options" parameter along
         public DataBaseContext(DbContextOptions options) : base(options) { }
-        public DbSet<CsvFileDataModel> CsvFiles {get;set;}
+        public DbSet<FileDataModel> File {get;set;}
 
     }
 }

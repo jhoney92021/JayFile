@@ -1,5 +1,5 @@
 @using FunWithFiles.Models
-@model CsvFileViewModel
+@model FileViewModel
 
 @{
     ViewData["Title"] = "View File Data As Json";
@@ -18,7 +18,6 @@
     </br>
     <table style="width:100%">
         <div>
-            <div>RowNumber</div>
             </br>
             </br>
             <div>@Model.FileHeader.ColumnsJson</div>
@@ -30,7 +29,7 @@
         @foreach (FileDataRowViewModel row in @Model.DataRowsJson)
         {
             <div>
-                <div>@row.RowIndex</div>
+                <div>RowNumber: @row.RowIndex</div>
                 @foreach (string column in @row.ColumnDataList)
                 {
                     <div>@column</div>

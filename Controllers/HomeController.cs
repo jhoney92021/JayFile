@@ -55,52 +55,31 @@ namespace FunWithFiles.Controllers
         }
 
         [HttpPost]
-        public IActionResult OrderFwwile(string order_by, string order_direction)
-        {
-
-            var fileToView = HttpContext.Session.GetObjectFromJson<CsvFileViewModel>("FileToView");
-
-            if (order_by == "RowNumber" && order_direction == "Descending")
-            {
-                fileToView.DataRows = fileToView.DataRows.OrderByDescending(dr => dr.RowIndex).ToList();
-                return View("ViewFileAsRaw", fileToView);
-            }
-            if (order_by == "RowNumber" && order_direction == "Ascending")
-            {
-                fileToView.DataRows = fileToView.DataRows.OrderBy(dr => dr.RowIndex).ToList();
-                return View("ViewFileAsRaw", fileToView);
-            }
-
-            var indexToOrderBy = fileToView.FileHeader.Columns.IndexOf(order_by);
-
-            if (order_by != "RowNumber" && order_direction == "Descending")
-            {
-                fileToView.DataRows = fileToView.DataRows.OrderByDescending(dr => dr.ColumnDataList[indexToOrderBy]).ToList();
-            }
-            if (order_by != "RowNumber" && order_direction == "Ascending")
-            {
-                fileToView.DataRows = fileToView.DataRows.OrderBy(dr => dr.ColumnDataList[indexToOrderBy]).ToList();
-            }
-
-            HttpContext.Session.SetObjectAsJson("FileToView", fileToView);
-
-            return View("ViewFileAsRaw", fileToView);
-        }
-        [HttpPost]
         public IActionResult OrderFile(string filter_by, string order_by, string order_direction, string file_type_to_view)
         {
             var viewName = $"ViewFileAs{file_type_to_view}";
-            var fileToView = HttpContext.Session.GetObjectFromJson<CsvFileViewModel>("FileToView");
+
+            OrderData(filter_by, order_by, order_direction, file_type_to_view);
+
+            var fileToView = HttpContext.Session.GetObjectFromJson<FileViewModel>("FileToView");
+
+            return View(viewName, fileToView);
+        }
+        [HttpPost]
+        public IActionResult OrdedddrFile(string filter_by, string order_by, string order_direction, string file_type_to_view)
+        {
+            var viewName = $"ViewFileAs{file_type_to_view}";
+            var fileToView = HttpContext.Session.GetObjectFromJson<FileViewModel>("FileToView");
 
             if (order_by == "RowNumber" && order_direction == "Descending")
             {
                 fileToView.DataRows = fileToView.DataRows.OrderByDescending(dr => dr.RowIndex).ToList();
-                return View("ViewFileAsRaw", fileToView);
+                return View(viewName, fileToView);
             }
             if (order_by == "RowNumber" && order_direction == "Ascending")
             {
                 fileToView.DataRows = fileToView.DataRows.OrderBy(dr => dr.RowIndex).ToList();
-                return View("ViewFileAsRaw", fileToView);
+                return View(viewName, fileToView);
             }
 
             var indexToOrderBy = fileToView.FileHeader.Columns.IndexOf(order_by);
@@ -126,13 +105,14 @@ namespace FunWithFiles.Controllers
 
             return View(viewName, fileToView);
         }
+        [HttpPost]
         public IActionResult FileTypeViewer(string file_type_to_view)
         {
-            var fileToView = HttpContext.Session.GetObjectFromJson<CsvFileViewModel>("FileToView");
+            var fileToView = HttpContext.Session.GetObjectFromJson<FileViewModel>("FileToView");
             var viewName = $"ViewFileAs{file_type_to_view}";
             return View(viewName,fileToView);
         }
-        private CsvFileViewModel ReadCsvWithHeaderFromWebClient(string target_url)
+        private FileViewModel ReadCsvWithHeaderFromWebClient(string target_url)
         {
 
             using WebClient client = new WebClient();
@@ -146,11 +126,11 @@ namespace FunWithFiles.Controllers
 
         }
 
-        private CsvFileViewModel BuildCsvFileObject(string fileBody, string fileHeader, WebHeaderCollection? responseHeaders)
+        private FileViewModel BuildCsvFileObject(string fileBody, string fileHeader, WebHeaderCollection? responseHeaders)
         {
 
-            var fileObject = new CsvFileViewModel();
-            fileObject.FileHeader = new CsvFileHeaderViewModel();
+            var fileObject = new FileViewModel();
+            fileObject.FileHeader = new FileHeaderViewModel();
             fileObject.FileHeader.ParseHeader(fileHeader);
             fileObject.FileHeader.ConvertToXml();
             fileObject.FileHeader.ConvertToJson();
@@ -165,7 +145,7 @@ namespace FunWithFiles.Controllers
                 fileObject.FileHeader.FileName = TryParseFileNameFromResponseHeaders(responseHeaders, "filename=", ".csv");
             }
 
-            if (HttpContext.Session.GetObjectFromJson<CsvFileViewModel>("FileToView") == null)
+            if (HttpContext.Session.GetObjectFromJson<FileViewModel>("FileToView") == null)
             {
                 HttpContext.Session.SetObjectAsJson("FileToView", fileObject);                
             }
@@ -183,6 +163,141 @@ namespace FunWithFiles.Controllers
 
             return fileName;
 
+        }
+
+        private void OrderData(string filter_by, string order_by, string order_direction, string file_type_to_view)
+        {
+            switch(file_type_to_view)
+            {
+                case "Raw":
+                   OrderRawData(filter_by, order_by,order_direction);
+                   break;
+                case "Json":
+                   OrderJsonData(filter_by, order_by,order_direction);
+                   break;
+                case "Xml":
+                   OrderXmlData(filter_by, order_by,order_direction);
+                   break;
+                default: break;
+
+            }
+        }
+        private void OrderRawData(string filter_by, string order_by, string order_direction)
+        {
+            var fileToView = HttpContext.Session.GetObjectFromJson<FileViewModel>("FileToView");
+            if (order_by == "RowNumber" && order_direction == "Descending")
+            {
+                fileToView.DataRows = fileToView.DataRows.OrderByDescending(dr => dr.RowIndex).ToList();
+                HttpContext.Session.SetObjectAsJson("FileToView", fileToView);   ;
+                return;
+            }
+            if (order_by == "RowNumber" && order_direction == "Ascending")
+            {
+                fileToView.DataRows = fileToView.DataRows.OrderBy(dr => dr.RowIndex).ToList();
+                HttpContext.Session.SetObjectAsJson("FileToView", fileToView);   
+                return;
+            }
+
+            var indexToOrderBy = fileToView.FileHeader.Columns.IndexOf(order_by);
+
+            if (order_by != "RowNumber" && order_direction == "Descending")
+            {
+                fileToView.DataRows = fileToView.DataRows
+                                            .Where(
+                                                    dr=>double.Parse(dr.ColumnDataList[indexToOrderBy]) >= double.Parse(filter_by)
+                                                  )
+                                            .OrderByDescending(dr => dr.ColumnDataList[indexToOrderBy])
+                                            .ToList();
+            }
+            if (order_by != "RowNumber" && order_direction == "Ascending")
+            {                
+                fileToView.DataRows = fileToView.DataRows
+                                            .Where(
+                                                    dr=>double.Parse(dr.ColumnDataList[indexToOrderBy]) >= double.Parse(filter_by)
+                                                  )
+                                            .OrderBy(dr => dr.ColumnDataList[indexToOrderBy])
+                                            .ToList();
+            } 
+
+            HttpContext.Session.SetObjectAsJson("FileToView", fileToView);      
+        }
+        private void OrderJsonData(string filter_by, string order_by, string order_direction)
+        {
+            var fileToView = HttpContext.Session.GetObjectFromJson<FileViewModel>("FileToView");
+            if (order_by == "RowNumber" && order_direction == "Descending")
+            {
+                fileToView.DataRowsJson = fileToView.DataRowsJson.OrderByDescending(dr => dr.RowIndex).ToList();
+                HttpContext.Session.SetObjectAsJson("FileToView", fileToView);   ;
+                return;
+            }
+            if (order_by == "RowNumber" && order_direction == "Ascending")
+            {
+                fileToView.DataRowsJson = fileToView.DataRowsJson.OrderBy(dr => dr.RowIndex).ToList();
+                HttpContext.Session.SetObjectAsJson("FileToView", fileToView);   
+                return;
+            }
+
+            var indexToOrderBy = fileToView.FileHeader.Columns.IndexOf(order_by);
+
+            if (order_by != "RowNumber" && order_direction == "Descending")
+            {
+                fileToView.DataRowsJson = fileToView.DataRowsJson
+                                            .Where(
+                                                    dr=>double.Parse(dr.ColumnDataList[indexToOrderBy]) >= double.Parse(filter_by)
+                                                  )
+                                            .OrderByDescending(dr => dr.ColumnDataList[indexToOrderBy])
+                                            .ToList();
+            }
+            if (order_by != "RowNumber" && order_direction == "Ascending")
+            {                
+                fileToView.DataRowsJson = fileToView.DataRowsJson
+                                            .Where(
+                                                    dr=>double.Parse(dr.ColumnDataList[indexToOrderBy]) >= double.Parse(filter_by)
+                                                  )
+                                            .OrderBy(dr => dr.ColumnDataList[indexToOrderBy])
+                                            .ToList();
+            } 
+
+            HttpContext.Session.SetObjectAsJson("FileToView", fileToView);      
+        }
+        private void OrderXmlData(string filter_by, string order_by, string order_direction)
+        {
+            var fileToView = HttpContext.Session.GetObjectFromJson<FileViewModel>("FileToView");
+            if (order_by == "RowNumber" && order_direction == "Descending")
+            {
+                fileToView.DataRowsXml = fileToView.DataRowsXml.OrderByDescending(dr => dr.RowIndex).ToList();
+                HttpContext.Session.SetObjectAsJson("FileToView", fileToView);   ;
+                return;
+            }
+            if (order_by == "RowNumber" && order_direction == "Ascending")
+            {
+                fileToView.DataRowsXml = fileToView.DataRowsXml.OrderBy(dr => dr.RowIndex).ToList();
+                HttpContext.Session.SetObjectAsJson("FileToView", fileToView);   
+                return;
+            }
+
+            var indexToOrderBy = fileToView.FileHeader.Columns.IndexOf(order_by);
+
+            if (order_by != "RowNumber" && order_direction == "Descending")
+            {
+                fileToView.DataRowsXml = fileToView.DataRowsXml
+                                            .Where(
+                                                    dr=>double.Parse(dr.ColumnDataList[indexToOrderBy]) >= double.Parse(filter_by)
+                                                  )
+                                            .OrderByDescending(dr => dr.ColumnDataList[indexToOrderBy])
+                                            .ToList();
+            }
+            if (order_by != "RowNumber" && order_direction == "Ascending")
+            {                
+                fileToView.DataRowsXml = fileToView.DataRowsXml
+                                            .Where(
+                                                    dr=>double.Parse(dr.ColumnDataList[indexToOrderBy]) >= double.Parse(filter_by)
+                                                  )
+                                            .OrderBy(dr => dr.ColumnDataList[indexToOrderBy])
+                                            .ToList();
+            } 
+
+            HttpContext.Session.SetObjectAsJson("FileToView", fileToView);      
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

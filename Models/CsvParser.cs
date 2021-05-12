@@ -43,33 +43,6 @@ namespace FunWithFiles.Models
 
             return rowList;
         }
-        public static List<CsvFileDataRowColumnViewModel> ParseCsvRowToCsvFileDataRowColumnList(string csvRow, int parentRowIdx, List<string> columnNames)
-        {
-            var columnList = new List<CsvFileDataRowColumnViewModel>();
-            var lengthToParse = csvRow.Length;
-            var stringStartIndex = 0;
-            int columnIdx = 0;
-
-            for (int idx = 0; idx < lengthToParse; idx++)
-            {
-                if (csvRow[idx] == _delimiter || csvRow[idx] == _newLine)
-                {
-                    columnList.Add(
-                        new CsvFileDataRowColumnViewModel()
-                        {
-                            ParentRowIdx = parentRowIdx,
-                            ColumnIdx = columnIdx,
-                            ColumnName = columnNames[columnIdx],
-                            ColumnData = csvRow.Substring(stringStartIndex, (idx - stringStartIndex))
-                        }
-                    );
-                    columnIdx++;
-                    stringStartIndex = idx + 1;
-                }
-            }
-
-            return columnList;
-        }
         public static List<FileDataRowViewModel> ParseCsvRowsToDataRowObject(string csvRowsAsString, List<string> columnNames)
         {
             var rowList = new List<FileDataRowViewModel>();

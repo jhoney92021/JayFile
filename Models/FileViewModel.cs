@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace FunWithFiles.Models
 {
-    public class CsvFileViewModel
+    public class FileViewModel
     {
         [NotMapped]
-        public CsvFileHeaderViewModel FileHeader {get;set;}
+        public FileHeaderViewModel FileHeader {get;set;}
         [NotMapped]
         public List<FileDataRowViewModel> DataRows {get;set;}
         public List<FileDataRowViewModel> DataRowsJson {get;set;}
