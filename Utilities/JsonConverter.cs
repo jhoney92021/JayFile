@@ -6,7 +6,7 @@ namespace FunWithFiles.Utilities
 {
     public static class JsonConverter
     {
-        public static string ConvertListToJson(List<string> parsedString, string property, string? property2 = null)
+        public static string ConvertStringListToJsonString(List<string> parsedString, string property, string? property2 = null)
         {
             string jsonString = "";
             string openTag = String.Concat("{" , $"\"{property}\" : \"");
@@ -58,7 +58,7 @@ namespace FunWithFiles.Utilities
             return jsonStringList;
         }
 
-        public static List<FileDataRowViewModel> ConvertDataRowsToJson(List<FileDataRowViewModel> parsedList, List<string> tagsToWrap)
+        public static List<FileDataRowViewModel> ConvertDataRowsToJson(List<FileDataRowViewModel> parsedList, List<string> propertyToWrap)
         {
             var jsonList = new List<FileDataRowViewModel>();
 
@@ -66,7 +66,7 @@ namespace FunWithFiles.Utilities
             {
                jsonList.Add(
                     new FileDataRowViewModel(){
-                        ColumnDataList = ConvertStringListToJsonStringList(element.ColumnDataList,tagsToWrap),
+                        ColumnDataList = ConvertStringListToJsonStringList(element.ColumnDataList,propertyToWrap),
                         RowIndex = element.RowIndex
                     }
                );

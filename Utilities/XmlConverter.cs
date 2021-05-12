@@ -39,7 +39,9 @@ namespace FunWithFiles.Utilities
             string xmlString = "";
             string openTag = "";
             string closeTag = "";
+
             int indexOfColumnName = 0;
+            
             foreach(string parsedString in parsedStringList)
             {
                 indexOfColumnName = parsedStringList.IndexOf(parsedString);

@@ -25,7 +25,7 @@ namespace FunWithFiles.Models
         }
         public void ConvertToJson()
         {
-            ColumnsJson = JsonConverter.ConvertListToJson(Columns, "header");
+            ColumnsJson = JsonConverter.ConvertStringListToJsonString(Columns, "header");
         }
     }
 }
