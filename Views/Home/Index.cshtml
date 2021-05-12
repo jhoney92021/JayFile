@@ -15,8 +15,13 @@
     <form asp-action="ViewFromUrl" asp-controller="Home" method="POST" >
         <label for="file_to_download_from_url">Give Target Url</label>
         <br/>
-        <input name="target_url" type="url" value="https://data.cityofnewyork.us/api/views/kku6-nxdu/rows.csv?accessType=DOWNLOAD">
+        <input name="target_url" type="url"> 
         <br/>
+        <select name="target_url_list_selection" >
+            <option value="https://data.cityofnewyork.us/api/views/kku6-nxdu/rows.csv?accessType=DOWNLOAD">Assignment Url</option>
+            <option value="wwwroot\sampleCsvs\sample1.csv">Sample1</option>
+            <option value="wwwroot\sampleCsvs\sample2.csv">Sample2</option>
+        </select>
         <br/>
         <br/>
         <label for="extension_type">Chose a File Extension (currently only csv will work)</label>

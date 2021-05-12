@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FunWithFiles.Models
 {
+    [Table("File")]
     public class FileDataModel
     {
         [Required]

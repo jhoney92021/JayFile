@@ -27,9 +27,17 @@ namespace FunWithFiles.Controllers
         }
 
         [HttpPost]
-        public IActionResult ViewFromUrl(string target_url, string extentsion_type)
+        public IActionResult ViewFromUrl(string target_url_list_selection, string extentsion_type, string? target_url)
         {
-            ViewBag.TargetUrl = target_url;
+            if(!String.IsNullOrWhiteSpace(target_url))
+            {
+                ViewBag.TargetUrl = target_url;
+            }
+            else
+            {
+                    ViewBag.TargetUrl = target_url_list_selection;
+            }
+
             if (Enum.IsDefined(typeof(SupportedFileTypes), extentsion_type))
             {
                 extentsion_type += " Note: this is not currently supported ";
@@ -298,12 +306,6 @@ namespace FunWithFiles.Controllers
             } 
 
             HttpContext.Session.SetObjectAsJson("FileToView", fileToView);      
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 
