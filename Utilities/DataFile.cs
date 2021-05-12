@@ -1,6 +1,4 @@
 using System.IO;
-using System.Threading.Tasks;
-using System.Net;
 using Microsoft.Win32;
 using System;
 using System.Text;
@@ -9,18 +7,6 @@ namespace FunWithFiles.Utilities
 {
     public static class DataFile
     {
-        private const string _defaultFileName = "noName";
-        public static async Task DownloadFile(string fileName, string fileBody)
-        {
-            await File.WriteAllTextAsync($"{fileName}", fileBody);
-        }
-
-        public static void DownloadFileToLocal(string filePath, string fileName)
-        {
-            using WebClient client = new WebClient();
-            client.DownloadFile(filePath, fileName);
-        }
-
         public static void WriteStringToFile(string fileData, string? fileName = "noName", string? fileExtension = ".txt")
         {
             var fileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(fileName);

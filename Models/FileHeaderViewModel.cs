@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 
 namespace FunWithFiles.Models
 {
@@ -18,12 +14,10 @@ namespace FunWithFiles.Models
             Columns = CsvParser.ParseCsvRowToList(headerRow);
             ColumnsRaw = headerRow;
         }
-
         public void SetColumnsRaw(string headerRow)
         {
             ColumnsRaw = headerRow;
         }
-
         public void ConvertToXml()
         {
             ColumnsXml = XmlConverter.ConvertStringListToXmlString(Columns, "header", "column");

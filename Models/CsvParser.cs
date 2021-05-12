@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace FunWithFiles.Models
@@ -24,24 +23,6 @@ namespace FunWithFiles.Models
             }
 
             return columnList;
-        }
-
-        public static List<List<string>> ParseCsvRowsToLists(string csvRowsAsString)
-        {
-            var rowList = new List<List<string>>();
-            var lengthToParse = csvRowsAsString.Length;
-            var stringStartIndex = 0;
-
-            for (int idx = 0; idx < lengthToParse; idx++)
-            {
-                if (csvRowsAsString[idx] == _newLine)
-                {
-                    rowList.Add(ParseCsvRowToList(csvRowsAsString.Substring(stringStartIndex, (idx - stringStartIndex))));
-                    stringStartIndex = idx + 1;
-                }
-            }
-
-            return rowList;
         }
         public static List<FileDataRowViewModel> ParseCsvRowsToDataRowObject(string csvRowsAsString, List<string> columnNames)
         {

@@ -16,7 +16,8 @@ namespace FunWithFiles.Models
             if(!String.IsNullOrWhiteSpace(property2)){
                 openTag = String.Concat("{" , $"\"{property2}\" : \"");
                 closeTag = "\"}";
-            }else
+            }
+            else
             {
                 openTag = "";
             };
