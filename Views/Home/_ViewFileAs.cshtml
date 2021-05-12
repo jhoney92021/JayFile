@@ -45,3 +45,12 @@
         </select>
         <input type="submit" name="file_type_to_view" value="ViewAsType">
     </form>
+    </br>
+    </br>
+    </br>
+    <form asp-action="DownloadFileInCurrentState" asp-controller="Home" method="POST">
+        <label name="download_file_in_current_state">Download File In Current State</label>
+        <input type="hidden" name="file_type" value="@Model" >
+        <input type="hidden" name="download_file_in_current_state" value="@Model" >
+        <input type="submit" value="DownloadFileInCurrentState">
+    </form>

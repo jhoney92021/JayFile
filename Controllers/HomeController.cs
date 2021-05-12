@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using FunWithFiles.Models;
+using FunWithFiles.Utilities;
 using System.IO;
 using System.Net;
 using Newtonsoft.Json;
@@ -120,9 +119,19 @@ namespace FunWithFiles.Controllers
             var viewName = $"ViewFileAs{file_type_to_view}";
             return View(viewName,fileToView);
         }
+        [HttpPost]
+        public IActionResult DownloadFileInCurrentState(FileViewModel download_file_in_current_state, string filePath, string fileExtension)
+        {
+            var viewName = $"ViewFileAs{fileExtension}";
+
+            var fileBody = GetFileBodyForFileType(download_file_in_current_state, fileExtension);
+
+            DataFile.WriteStringToFile(fileBody, download_file_in_current_state.FileHeader.FileName, fileExtension);
+
+            return View();
+        }
         private FileViewModel ReadCsvWithHeaderFromWebClient(string target_url)
         {
-
             using WebClient client = new WebClient();
             using Stream stream = client.OpenRead(target_url);
             using StreamReader reader = new StreamReader(stream);
@@ -131,7 +140,6 @@ namespace FunWithFiles.Controllers
             String content = reader.ReadToEnd();
 
             return BuildCsvFileObject(content, header, client.ResponseHeaders);
-
         }
 
         private FileViewModel BuildCsvFileObject(string fileBody, string fileHeader, WebHeaderCollection? responseHeaders)
@@ -152,6 +160,10 @@ namespace FunWithFiles.Controllers
             {
                 fileObject.FileHeader.FileName = TryParseFileNameFromResponseHeaders(responseHeaders, "filename=", ".csv");
             }
+            else
+            {
+                fileObject.FileHeader.FileName = "noName";
+            }
 
             if (HttpContext.Session.GetObjectFromJson<FileViewModel>("FileToView") == null)
             {
@@ -170,9 +182,21 @@ namespace FunWithFiles.Controllers
             string fileName = content_Disposition.Substring(filenameIdx, extentsionIdx - filenameIdx);
 
             return fileName;
-
         }
 
+        private string GetFileBodyForFileType(FileViewModel download_file_in_current_state, string fileExtension)
+        {
+            switch(fileExtension)
+            {
+                case "Raw":
+                   return download_file_in_current_state.DataRows.ToString();
+                case "Json":
+                   return download_file_in_current_state.DataRowsJson.ToString();
+                case "Xml":
+                   return download_file_in_current_state.DataRowsXml.ToString();
+                default: return "";
+            }
+        }
         private void OrderData(string filter_by, string order_by, string order_direction, string file_type_to_view)
         {
             switch(file_type_to_view)
@@ -187,7 +211,6 @@ namespace FunWithFiles.Controllers
                    OrderXmlData(filter_by, order_by,order_direction);
                    break;
                 default: break;
-
             }
         }
         private void OrderRawData(string filter_by, string order_by, string order_direction)

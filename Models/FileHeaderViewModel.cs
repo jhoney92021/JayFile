@@ -8,7 +8,7 @@ namespace FunWithFiles.Models
 {
     public class FileHeaderViewModel
     {
-        public string FileName { get; set; }
+        public string FileName { get; set; } = "NoNameGrabbedFromFtp";
         public List<string> Columns { get; set; }
         public string ColumnsXml { get; set; }
         public string ColumnsRaw { get; set; }
