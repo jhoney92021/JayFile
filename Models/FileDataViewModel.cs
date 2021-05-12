@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using FunWithFiles.Utilities;
 
 namespace FunWithFiles.Models
 {
-    public class FileViewModel
+    public class FileDataViewModel
     {
-        public FileHeaderViewModel FileHeader {get;set;}
+        public FileDataHeaderViewModel FileHeader {get;set;}
         public List<FileDataRowViewModel> DataRows {get;set;}
         public List<FileDataRowViewModel> DataRowsJson {get;set;}
         public List<FileDataRowViewModel> DataRowsXml {get;set;}

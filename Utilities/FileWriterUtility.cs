@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FunWithFiles.Utilities
 {
-    public static class DataFile
+    public static class FileWriterUtility
     {
         public static void WriteStringToFile(string fileData, string? fileName = "noName", string? fileExtension = ".txt")
         {

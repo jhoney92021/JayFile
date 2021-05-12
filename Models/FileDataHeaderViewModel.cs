@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using FunWithFiles.Utilities;
 
 namespace FunWithFiles.Models
 {
-    public class FileHeaderViewModel
+    public class FileDataHeaderViewModel
     {
         public string FileName { get; set; }
         public List<string> Columns { get; set; }

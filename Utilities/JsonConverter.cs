@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using FunWithFiles.Models;
 
-namespace FunWithFiles.Models
+namespace FunWithFiles.Utilities
 {
     public static class JsonConverter
     {
