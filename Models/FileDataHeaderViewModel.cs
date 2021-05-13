@@ -13,7 +13,6 @@ namespace FunWithFiles.Models
         public void ParseHeader(string headerRow)
         {
             Columns = CsvParser.ParseCsvRowToList(headerRow);
-            ColumnsRaw = headerRow;
         }
         public void SetColumnsRaw(string headerRow)
         {
